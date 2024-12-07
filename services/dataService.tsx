@@ -1,6 +1,6 @@
 export const loadWaterQualityData = async () => {
   try {
-    const response = await fetch('http://192.168.240.122:8000/water-quality/predict', {
+    const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/water-quality/predict`, {
       method: 'GET', 
       headers: {
         'Content-Type': 'application/json',

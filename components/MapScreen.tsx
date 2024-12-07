@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { StyleSheet, ActivityIndicator, View, Text } from 'react-native';
 import WebView from 'react-native-webview';
-import { API_URL } from '../.expo/config/api';
 
 const MapScreen = () => {
   const [isLoading, setIsLoading] = useState(true);
@@ -13,7 +12,7 @@ const MapScreen = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch(API_URL);
+        const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/stations-data/latest`);
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
