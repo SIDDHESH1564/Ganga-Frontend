@@ -6,6 +6,7 @@ import ForecastScreen from '@/components/Forecast';
 import MapDashboard from '../components/MapDashboard';
 import SplashScreen from '@/components/SplashScreen';
 import SatelliteMonitoringApp from '@/components/SatellitesDash';
+import MapScreen from '@/components/MapScreen';
 
 interface Route {
   key: string;
@@ -27,7 +28,7 @@ const ROUTES: Record<string, Route> = {
   },
   map: {
     key: 'map',
-    component: MapDashboard,
+    component: MapScreen,
   },
 };
 

@@ -78,14 +78,8 @@ const WaterMonitoringApp = () => {
         name: param.name,
         normalRange: param.normal_range
       }));
-      // console.log('Combine Data', combinedData);
-      // console.log('tranformed data',transformedData);
-      // console.log('parameters', uniqueParams);
       setParameters(uniqueParams);
       setStationData(transformedData);
-
-      // console.log('parameters after', parameters);
-      // console.log('stationData after', stationData);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An error occurred');
       console.error('Error fetching data:', err);
@@ -138,21 +132,68 @@ const WaterMonitoringApp = () => {
     </Modal>
   );
 
+  // const renderChart = (param: { name: string; normalRange: [number, number] }) => {
+  //   const data = {
+  //     labels: stationData.map(d => formatDate(d.timestamp)),
+  //     datasets: [{
+  //       data: stationData.map(d => d[param.name]),
+  //       color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
+  //       strokeWidth: 2
+  //     }]
+  //   };
+  //   // console.log('data', data);
+
+  //   return (
+  //     <View key={param.name} style={styles.chartContainer}>
+  //       <Text style={styles.chartTitle}>{param.name}</Text>
+  //       <LineChart 
+  //         data={data}
+  //         width={screenWidth - 80}
+  //         height={220}
+  //         chartConfig={{
+  //           backgroundColor: '#ffffff',
+  //           backgroundGradientFrom: '#ffffff',
+  //           backgroundGradientTo: '#ffffff',
+  //           decimalPlaces: 2,
+  //           color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+  //           style: {
+  //             borderRadius: 16
+  //           }
+  //         }}
+  //         bezier
+  //         style={{
+  //           marginVertical: 8,
+  //           borderRadius: 16
+  //         }}
+  //       />
+  //       <View style={styles.normalRangeContainer}>
+  //         <Text style={styles.normalRangeText}>
+  //           Normal Range: {param.normalRange[0]} - {param.normalRange[1]}
+  //         </Text>
+  //       </View>
+  //     </View>
+  //   );
+  // };
+
+
   const renderChart = (param: { name: string; normalRange: [number, number] }) => {
     const data = {
       labels: stationData.map(d => formatDate(d.timestamp)),
-      datasets: [{
-        data: stationData.map(d => d[param.name]),
-        color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`,
-        strokeWidth: 2
-      }]
+      datasets: [
+        {
+          data: stationData.map(d => d[param.name]),
+          color: (opacity = 1) => `rgba(33, 150, 243, ${opacity})`, // Line color
+          strokeWidth: 2, // Line thickness
+        },
+      ],
+    
     };
-    // console.log('data', data);
-
+    console.log('data', data);
+    
     return (
       <View key={param.name} style={styles.chartContainer}>
         <Text style={styles.chartTitle}>{param.name}</Text>
-        <LineChart 
+        <LineChart
           data={data}
           width={screenWidth - 80}
           height={220}
@@ -160,16 +201,26 @@ const WaterMonitoringApp = () => {
             backgroundColor: '#ffffff',
             backgroundGradientFrom: '#ffffff',
             backgroundGradientTo: '#ffffff',
-            decimalPlaces: 2,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+            decimalPlaces: 2, // Decimal precision
+            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`, // Text and axis colors
             style: {
-              borderRadius: 16
-            }
+              borderRadius: 16,
+            },
           }}
           bezier
           style={{
             marginVertical: 8,
-            borderRadius: 16
+            borderRadius: 16,
+          }}
+          propsForDots={{
+            r: '6', // Dot radius
+            strokeWidth: '2', // Dot border thickness
+            stroke: (_: any, index: number) => {
+              console.log(`Index: ${index}, StationData Length: ${stationData.length}`);
+              return index >= stationData.length - 5
+                ? 'rgba(255, 69, 0, 1)' // Red for forecast points
+                : 'rgba(33, 150, 243, 1)'; // Blue for historical points
+            },
           }}
         />
         <View style={styles.normalRangeContainer}>
@@ -180,6 +231,7 @@ const WaterMonitoringApp = () => {
       </View>
     );
   };
+
 
   if (isLoading) {
     return (

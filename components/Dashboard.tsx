@@ -64,8 +64,11 @@ const WaterQualityCarousel: React.FC = () => {
       conductivity: stationData.parameters_used?.conductivity ?? 0,
       dissolvedOxygen: stationData.parameters_used?.oxygen_dissolved ?? 0,
       temperature: stationData.parameters_used?.water_temperature ?? 0,
+      COD: stationData.parameters_used?.cod ?? 0,
       wqi: stationData.wqi ?? 0,
-
+      BOD: stationData.parameters_used?.bod ?? 0,
+      nitrate: stationData.parameters_used?.nitrate ?? 0,
+      chloride: stationData.parameters_used?.chloride ?? 0,
     };
     return parameters;
   };
@@ -90,6 +93,11 @@ const WaterQualityCarousel: React.FC = () => {
             status = 'Poor';
           }
           return (
+            <ScrollView
+              key={index}
+              style={styles.verticalScroll}
+              showsVerticalScrollIndicator={true}
+            >
             <View key={index} style={styles.slide}>
               <View style={styles.statusContainer}>
                 <View style={styles.headerRow}>
@@ -116,7 +124,7 @@ const WaterQualityCarousel: React.FC = () => {
                   </View>
                 </View>
               </View>
-
+              
               <View style={styles.parametersContainer}>
                 <Text style={styles.sectionHeader}>Current Parameters</Text>
                 <View style={styles.parametersGrid}>
@@ -124,10 +132,17 @@ const WaterQualityCarousel: React.FC = () => {
                   <ParameterCard label="Turbidity" value={params.turbidity.toFixed(2)} />
                   <ParameterCard label="Conductivity" value={params.conductivity.toFixed(2)} />
                   <ParameterCard label="Dissolved Oxygen" value={params.dissolvedOxygen.toFixed(2)} />
+                  <ParameterCard label="COD" value={params.COD.toFixed(2)} />
+                  <ParameterCard label="BOD" value={params.BOD.toFixed(2)} />
+                  <ParameterCard label="Nitrate" value={params.nitrate.toFixed(2)} />
                   <ParameterCard label="Temperature" value={params.temperature.toFixed(2)} />
+                  <ParameterCard label="Chloride" value={params.chloride.toFixed(2)} />
                 </View>
               </View>
+
+
             </View>
+            </ScrollView>
           );
         })}
       </ScrollView>
@@ -263,6 +278,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: '#FF3B30',
     textAlign: 'center',
+  },
+  verticalScroll: {
+    width: SCREEN_WIDTH,
   },
 });
 
