@@ -1,6 +1,6 @@
 export const DataFlood = async () => {
     try {
-      const response = await fetch('http://192.168.29.123:8000/flood-observatory/data', {
+      const response = await fetch('http://192.168.240.122:8000/flood-observatory/data', {
         method: 'GET', 
         headers: {
           'Content-Type': 'application/json',

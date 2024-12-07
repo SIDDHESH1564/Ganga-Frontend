@@ -26,6 +26,12 @@ interface SatelliteDataPoint {
   parameters: SatelliteParameters;
 }
 
+interface ParameterCardProps {
+  label: string;
+  value: string | number | null;
+}
+
+
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -63,6 +69,10 @@ const SatelliteMonitoringApp = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dataflood, setDataflood] = useState<any>(null);
+  // const [status, setStatus] = useState<string | null>(null);
+ 
+
+  
 
   useEffect(() => {
     const fetchDataflood = async () => {
@@ -262,14 +272,15 @@ const SatelliteMonitoringApp = () => {
           <Text style={styles.loadingText}>Loading parameters...</Text>
         </View>
       ) : (
+        
         <View style={styles.parametersContainer}>
           <Text style={styles.sectionHeader}>Current Parameters</Text>
           <View style={styles.parametersGrid}>
-            <ParameterCard label="gfds_area_id" value={dataflood.gfds_area_id} />
-            <ParameterCard label="last_measured" value={dataflood.last_measured} />
-            <ParameterCard label="discharge" value={dataflood.discharge} />
-            <ParameterCard label="flood_magnitude" value={dataflood.flood_magnitude} />
-            <ParameterCard label="status" value={dataflood.status} />
+            <ParameterCard label="Area ID (GFDS)" value={dataflood.gfds_area_id} />
+            <ParameterCard label="Last Measured" value={dataflood.last_measured} />
+            <ParameterCard label="Discharge in m^3/sec" value={dataflood.discharge.split(" ")[0]} />
+            <ParameterCard label="Flood Magnitude (Scale of 1-10)" value={dataflood.flood_magnitude.split("")[0]} />
+            <ParameterCard label="Status" value={dataflood.status} />
           </View>
         </View>
       )}
@@ -289,14 +300,44 @@ interface ParameterCardProps {
   value: string | number | null;
 }
 
-const ParameterCard: React.FC<ParameterCardProps> = ({ label, value }) => (
-  <View style={styles.parameterCard}>
-    <Text style={styles.parameterLabel}>{label}</Text>
-    <Text style={styles.parameterValue}>
-      {value !== null && value !== undefined ? String(value) : 'N/A'}
-    </Text>
-  </View>
-);
+const ParameterCard: React.FC<ParameterCardProps> = ({ label, value }) => {
+  const getStatusText = (value: string | number | null) => {
+    if (label === "Status" && value !== null) {
+      const status = Number(value);
+      switch (status) {
+        case 1:
+          return "Low";
+        case 2:
+          return "Normal flow";
+        case 3:
+          return "Moderate flow";
+        case 4:
+          return "Major flow";
+        default:
+          return "Unknown status";
+      }
+    }
+    return value !== null && value !== undefined ? String(value) : 'N/A';
+  };
+
+  return (
+    <View style={styles.parameterCard}>
+      <Text style={styles.parameterLabel}>{label}</Text>
+      <Text style={styles.parameterValue}>
+        {getStatusText(value)}
+      </Text>
+    </View>
+  );
+};
+
+// const ParameterCard: React.FC<ParameterCardProps> = ({ label, value }) => (
+//   <View style={styles.parameterCard}>
+//     <Text style={styles.parameterLabel}>{label}</Text>
+//     <Text style={styles.parameterValue}>
+//       {value !== null && value !== undefined ? String(value) : 'N/A'}
+//     </Text>
+//   </View>
+// );
 
 const styles = StyleSheet.create({
   container: {

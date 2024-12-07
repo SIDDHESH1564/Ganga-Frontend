@@ -1,5 +1,5 @@
 // api.ts
-const BASE_URL = 'http://192.168.29.123:8000'; // Replace with your actual API base URL
+const BASE_URL = 'http://192.168.240.122:8000'; // Replace with your actual API base URL
 
 // Define the parameter structure for satellite data
 interface SatelliteParameters {
